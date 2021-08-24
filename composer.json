@@ -1,0 +1,47 @@
+{
+    "type": "drupal-dtt",
+    "name": "sweetchuck/dtt-core",
+    "description": "@todo project description",
+    "keywords": [
+        "drupal",
+        "test-trait",
+        "core"
+    ],
+    "authors": [
+        {
+            "name": "Dávid Andor",
+            "role": "Maintainer",
+            "homepage": "https://github.com/Sweetchuck"
+        }
+    ],
+    "homepage": "https://github.com/Sweetchuck/dtt-core",
+    "support": {
+        "source": "https://github.com/Sweetchuck/dtt-core",
+        "issues": "https://github.com/Sweetchuck/dtt-core/issues"
+    },
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "bin-dir": "bin",
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "repositories": {},
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Sweetchuck\\DrupalTestTraits\\Core\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "scripts": {},
+    "scripts-descriptions": {},
+    "extra": {}
+}
