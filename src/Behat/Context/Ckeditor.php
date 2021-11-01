@@ -10,7 +10,8 @@ use PHPUnit\Framework\Assert;
 class Ckeditor extends Base {
 
   /**
-   * @Then I fill in wysiwyg on field :locator with :value
+   * @Given the :locator wysiwyg field is filled with :value
+   * @When I fill in wysiwyg on field :locator with :value
    */
   public function doFillInWysiwygOnFieldWith(string $locator, string $value) {
     $element = $this
@@ -48,7 +49,7 @@ class Ckeditor extends Base {
 
     $this
       ->getSession()
-      ->executeScript("CKEDITOR.instances['{$fieldIdSafe}'].setData('{$newValueSafe}');");
+      ->executeScript("console.log('{$fieldIdSafe}') ; CKEDITOR.instances['{$fieldIdSafe}'].setData('{$newValueSafe}');");
 
     return $this;
   }

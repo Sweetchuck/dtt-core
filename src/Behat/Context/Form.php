@@ -14,7 +14,7 @@ class Form extends Base {
    * @todo Maybe the "id" attribute of the form should be used as selector.
    */
   public function doRequiredAttributeRemoveAllByFormSelector(string $formDrupalSelector) {
-    $form = $this->findElementByDrupalSelector($formDrupalSelector, TRUE);
+    $form = $this->findFormByDrupalSelector($formDrupalSelector, TRUE);
     $this->doRequiredAttributeRemoveAllByForm($form);
   }
 

@@ -30,7 +30,9 @@
     },
     "repositories": {},
     "require": {
-        "php": ">=7.4"
+        "php": ">=7.4",
+        "sweetchuck/utils": "1.x-dev",
+        "webmozart/path-util": "^2.3"
     },
     "require-dev": {},
     "autoload": {

@@ -4,15 +4,18 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\DrupalTestTraits\Core\Behat\Context;
 
+use Behat\Behat\Context\TranslatableContext;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use NuvoleWeb\Drupal\DrupalExtension\Context\RawDrupalContext;
+use Sweetchuck\DrupalTestTraits\Core\Behat\TranslatableContextTrait;
 use Sweetchuck\DrupalTestTraits\Core\FinderTrait;
 use Sweetchuck\DrupalTestTraits\Core\Utils as TestTraitsUtils;
 
-class Base extends RawDrupalContext {
+class Base extends RawDrupalContext implements TranslatableContext {
 
   use FinderTrait;
+  use TranslatableContextTrait;
 
   protected function getFinderSettings(): array {
     return $this->getDrupalParameter('selectors');
@@ -22,10 +25,7 @@ class Base extends RawDrupalContext {
     $this->initFinders();
   }
 
-  /**
-   * @todo Rename this method, because it is misleading.
-   */
-  public function findElementByDrupalSelector(string $drupalSelector, bool $required = FALSE): ?NodeElement {
+  public function findFormByDrupalSelector(string $drupalSelector, bool $required = FALSE): ?NodeElement {
     $selector = 'xpath';
     $locator = sprintf('//form[@data-drupal-selector = "%s"]', TestTraitsUtils::escapeXpathValue($drupalSelector));
     $session = $this->getSession();
