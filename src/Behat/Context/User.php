@@ -39,18 +39,21 @@ class User extends Base {
     }
     sort($roleIds);
 
-    if (!$this->loggedInWithRole($roles)) {
-      $user = (object) [
-        'name' => $this->getRandom()->name(8),
-        'pass' => $this->getRandom()->name(16),
-        'role' => implode(',', $roleIds),
-        'roles' => $roleIds,
-      ];
-      $user->mail = "{$user->name}@example.com";
-
-      $this->userCreate($user);
-      $this->login($user);
+    if ($this->loggedInWithRole($roles)) {
+      return;
     }
+
+    // @todo Validate $roleIds.
+    $user = (object) [
+      'name' => $this->getRandom()->name(8),
+      'pass' => $this->getRandom()->name(16),
+      'role' => implode(',', $roleIds),
+      'roles' => $roleIds,
+    ];
+    $user->mail = "{$user->name}@example.com";
+
+    $this->userCreate($user);
+    $this->login($user);
   }
 
   public function parseUserRoleList(string $userRoleList): array {
@@ -60,4 +63,5 @@ class User extends Base {
 
     return array_unique($roles);
   }
+
 }
