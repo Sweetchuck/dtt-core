@@ -47,9 +47,32 @@ class Ckeditor extends Base {
     $fieldIdSafe = addslashes($fieldId);
     $newValueSafe = addslashes($newValue);
 
+    $script = <<<JS
+if (typeof CKEDITOR !== 'undefined'
+  && CKEDITOR.instances.hasOwnProperty('{$fieldIdSafe}')
+) {
+  CKEDITOR
+    .instances['{$fieldIdSafe}']
+    .setData('{$newValueSafe}');
+
+  return;
+}
+
+if (typeof CKEditor5 !== 'undefined') {
+  const editable = document.querySelector('#{$fieldIdSafe} ~ .ck.ck-editor .ck-editor__editable');
+  if (editable !== null && editable.hasOwnProperty('ckeditorInstance')) {
+    editable
+      .ckeditorInstance
+      .setData('{$newValueSafe}');
+
+    return;
+  }
+}
+JS;
+
     $this
       ->getSession()
-      ->executeScript("console.log('{$fieldIdSafe}') ; CKEDITOR.instances['{$fieldIdSafe}'].setData('{$newValueSafe}');");
+      ->executeScript($script);
 
     return $this;
   }
