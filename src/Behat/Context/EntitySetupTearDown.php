@@ -85,7 +85,7 @@ class EntitySetupTearDown extends Base {
    */
   public function hookBeforeScenario() {
     try {
-      $this->visitPath('/');
+      $this->visitPath('/core/misc/favicon.ico');
     }
     catch (\Exception $e) {
       // Do nothing.
@@ -113,23 +113,15 @@ class EntitySetupTearDown extends Base {
         continue;
       }
 
-      $ids = $etm
-        ->getStorage($entityType->id())
-        ->getQuery()
-        ->sort($entityType->getKey('id'), 'DESC')
-        ->range(0, 1)
-        ->execute();
-
-      if (!$ids) {
-        $this->latestContentEntityIds[$entityType->id()] = NULL;
-
+      $id = $this->getLatestContentEntityId($entityType);
+      $this->latestContentEntityIds[$entityType->id()] = $id;
+      if ($id === NULL) {
         continue;
       }
 
-      $id = reset($ids);
       // @todo Instance with string ID can be numeric as well.
       // Check the type of the ID field.
-      if (preg_match('/^\d+$/', $id)) {
+      if (preg_match('/^\d+$/', (string) $id)) {
         $this->latestContentEntityIds[$entityType->id()] = (int) $id;
 
         continue;
@@ -142,6 +134,36 @@ class EntitySetupTearDown extends Base {
     }
 
     return $this;
+  }
+
+  /**
+   * @return null|int|string
+   */
+  protected function getLatestContentEntityId(EntityTypeInterface $entityType) {
+    $etm = Drupal::entityTypeManager();
+
+    if ($entityType->id() === 'group') {
+      // @todo Something wrong with "group" entity type.
+      $all = $etm
+        ->getStorage($entityType->id())
+        ->loadMultiple(NULL);
+
+      ksort($all, \SORT_NUMERIC);
+      $entity = end($all);
+
+      return $entity ? $entity->id() : NULL;
+    }
+
+    /** @var int[]|string[] $ids */
+    $ids = $etm
+      ->getStorage($entityType->id())
+      ->getQuery()
+      ->sort($entityType->getKey('id'), 'DESC')
+      ->range(0, 1)
+      ->execute();
+    $id = reset($ids);
+
+    return $id === FALSE ? NULL : $id;
   }
 
   /**

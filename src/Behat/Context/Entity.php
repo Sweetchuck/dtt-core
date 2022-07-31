@@ -207,7 +207,7 @@ class Entity extends Base {
   /**
    * @return \Drupal\field\FieldStorageConfigInterface[]
    */
-  protected function getFields(string $entityTypeId): array {
+  public function getFields(string $entityTypeId): array {
     $fields = [];
 
     $allFields = FieldStorageConfig::loadMultiple();
@@ -223,7 +223,7 @@ class Entity extends Base {
     return $fields;
   }
 
-  protected function keyValuePairsToNestedArray(array $keyValuePairs): array {
+  public function keyValuePairsToNestedArray(array $keyValuePairs): array {
     $values = [];
     foreach ($keyValuePairs as $keyParts => $value) {
       $parents = explode(':', $keyParts);
@@ -233,7 +233,7 @@ class Entity extends Base {
     return $values;
   }
 
-  protected function buildNestedArray(array $parents, $value): array {
+  public function buildNestedArray(array $parents, $value): array {
     $key = array_shift($parents);
 
     return [
