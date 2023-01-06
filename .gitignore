@@ -1,3 +1,10 @@
 
-/bin/
+# Composer
 /vendor/
+/sweetchuck-dtt-core*.gz
+/sweetchuck-dtt-core*.tar.bz2
+/sweetchuck-dtt-core*.tar.gz
+/sweetchuck-dtt-core*.zip
+
+# PHPStan
+/phpstan.neon

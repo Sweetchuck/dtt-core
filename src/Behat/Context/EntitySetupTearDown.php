@@ -140,30 +140,16 @@ class EntitySetupTearDown extends Base {
    * @return null|int|string
    */
   protected function getLatestContentEntityId(EntityTypeInterface $entityType) {
-    $etm = Drupal::entityTypeManager();
-
-    if ($entityType->id() === 'group') {
-      // @todo Something wrong with "group" entity type.
-      $all = $etm
-        ->getStorage($entityType->id())
-        ->loadMultiple(NULL);
-
-      ksort($all, \SORT_NUMERIC);
-      $entity = end($all);
-
-      return $entity ? $entity->id() : NULL;
-    }
-
     /** @var int[]|string[] $ids */
-    $ids = $etm
+    $ids = Drupal::entityTypeManager()
       ->getStorage($entityType->id())
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort($entityType->getKey('id'), 'DESC')
       ->range(0, 1)
       ->execute();
-    $id = reset($ids);
 
-    return $id === FALSE ? NULL : $id;
+    return $ids ? reset($ids) : NULL;
   }
 
   /**

@@ -40,7 +40,7 @@ trait FinderTrait {
     if ($this->themeDetector === NULL) {
       $serviceId = 'sweetchuck.behat.theme_detector';
       $this->themeDetector = $this->getContainer()->has($serviceId) ?
-        $this->themeDetector = $this->getContainer()->get($serviceId)
+        $this->getContainer()->get($serviceId)
         : new ThemeDetector();
     }
 

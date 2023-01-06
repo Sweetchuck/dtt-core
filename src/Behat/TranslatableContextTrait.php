@@ -5,8 +5,11 @@ declare(strict_types = 1);
 namespace Sweetchuck\DrupalTestTraits\Core\Behat;
 
 use Sweetchuck\Utils\Filesystem as FilesystemUtils;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
+/**
+ * @see \Behat\Behat\Context\TranslatableContext
+ */
 trait TranslatableContextTrait {
 
   /**
@@ -19,6 +22,8 @@ trait TranslatableContextTrait {
    */
   protected static array $i18nDirs = [];
 
+  protected static int $i18nNamespaceDepth = 3;
+
   /**
    * {@inheritdoc}
    */
@@ -30,10 +35,10 @@ trait TranslatableContextTrait {
 
   protected static function getTranslationDir(): string {
     $namespaceParts = explode('\\', static::class);
-    $prefix = implode('\\', array_slice($namespaceParts, 0, 3));
+    $prefix = implode('\\', array_slice($namespaceParts, 0, static::$i18nNamespaceDepth));
 
     if (!isset(static::$i18nDirs[$prefix])) {
-      $composerFileName = getenv('COMPOSER') ?: 'composer.json';
+      $composerFileName = 'composer.json';
       $reflection = new \ReflectionClass(static::class);
 
       static::$i18nDirs[$prefix] = Path::join(
@@ -42,7 +47,7 @@ trait TranslatableContextTrait {
       );
     }
 
-    return Path::join(static::$i18nDirs[$prefix], end($namespaceParts));
+    return Path::join(static::$i18nDirs[$prefix], (string) end($namespaceParts));
   }
 
 }

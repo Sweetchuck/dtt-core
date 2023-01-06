@@ -26,14 +26,16 @@ class FormCheckboxes extends Base {
         'selector' => 'css',
         'locator' => '.form-boolean-group.form-checkboxes',
       ],
+      // Relative to the ::container.
       'drupal.core.checkboxes.wrapper' => [
         'selector' => 'xpath',
-        'locator' => 'ancestor::fieldset[legend[normalize-space() = "{{ legend }}"]]',
+        'locator' => '//ancestor::fieldset[legend[normalize-space() = "{{ legend }}"]]',
       ],
       'drupal.core.checkboxes.legend' => [
         'selector' => 'xpath',
         'locator' => '//legend',
       ],
+      // Relative to the ::wrapper.
       'drupal.core.checkboxes.label' => [
         'selector' => 'xpath',
         'locator' => '//label',
@@ -131,6 +133,13 @@ class FormCheckboxes extends Base {
       ],
     );
 
+    if (!$containers && $required) {
+      throw new ExpectationException(
+        sprintf('There are no any checkboxes container. Label: "%s"', $groupLabel),
+        $this->getSession(),
+      );
+    }
+
     foreach ($containers as $container) {
       $wrapper = $container->find($wrapperFinder['selector'], $wrapperFinder['locator']);
       if ($wrapper) {
@@ -141,7 +150,7 @@ class FormCheckboxes extends Base {
     if ($required) {
       throw new ExpectationException(
         sprintf('There is no checkboxes with label: "%s"', $groupLabel),
-        $this->getSession()
+        $this->getSession(),
       );
     }
 
