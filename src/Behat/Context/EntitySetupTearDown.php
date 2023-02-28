@@ -130,6 +130,7 @@ class EntitySetupTearDown extends Base {
       $this->latestContentEntityIds[$entityType->id()] = $etm
         ->getStorage($entityType->id())
         ->getQuery()
+        ->accessCheck(FALSE)
         ->execute();
     }
 
@@ -166,7 +167,6 @@ class EntitySetupTearDown extends Base {
       $entityType = $etm->getDefinition($entityTypeId);
       $storage = $etm->getStorage($entityTypeId);
 
-      $query = $storage->getQuery();
 
       if ($entityId === NULL) {
         $storage->resetCache();
@@ -175,7 +175,9 @@ class EntitySetupTearDown extends Base {
         continue;
       }
 
-      $idsToDelete = $query
+      $idsToDelete = $storage
+        ->getQuery()
+        ->accessCheck(FALSE)
         ->condition(
           $entityType->getKey('id'),
           $entityId,
