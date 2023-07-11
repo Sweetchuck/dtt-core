@@ -63,7 +63,7 @@ trait FinderTrait {
    */
   abstract protected function getFinderSettings(): array;
 
-  protected function getFinder(string $finderName, array $args = []): array {
+  public function getFinder(string $finderName, array $args = []): array {
     $drupalSelectors = $this->getFinderSettings();
     $finderNameSuggestions = $this->getFinderNameSuggestions($finderName);
     $finder = NULL;
