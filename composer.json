@@ -33,7 +33,6 @@
     "require": {
         "php": ">=7.4",
         "ext-pdo": "*",
-        "sweetchuck/utils": "1.x-dev",
         "symfony/filesystem": "^5.0 || ^6.0"
     },
     "autoload": {
