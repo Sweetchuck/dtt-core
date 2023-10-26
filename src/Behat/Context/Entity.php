@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\DrupalTestTraits\Core\Behat\Context;
 
+use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -32,6 +33,23 @@ class Entity extends Base {
     );
 
     $this->visitPath($url);
+  }
+
+  /**
+   * @Given :entityTypeId content entity:
+   *
+   * @code
+   * Given "block_content" content entity:
+   *   | type | basic          |
+   *   | info | My description |
+   * @endcode
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function doContentEntityCreate(string $entityTypeId, TableNode $table): void {
+    $this->createContentEntity($entityTypeId, $table->getRowsHash());
   }
 
   public function getEntityByLabel(
@@ -118,6 +136,11 @@ class Entity extends Base {
     return NULL;
   }
 
+  /**
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
   public function createContentEntity(
     string $entityTypeId,
     array $fieldValues

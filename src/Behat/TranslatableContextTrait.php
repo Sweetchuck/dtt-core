@@ -30,7 +30,12 @@ trait TranslatableContextTrait {
   public static function getTranslationResources() {
     $translationDir = static::getTranslationDir();
 
-    return glob("$translationDir/*.{xliff,php,yml}", GLOB_BRACE);
+    // On non GNU based systems (e.g.: Alpine) \GLOB_BRACE is not available.
+    return array_unique(array_merge(
+      glob("$translationDir/*.xliff") ?: [],
+      glob("$translationDir/*.php") ?: [],
+      glob("$translationDir/*.yml") ?: [],
+    ));
   }
 
   protected static function getTranslationDir(): string {

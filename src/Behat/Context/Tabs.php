@@ -26,11 +26,19 @@ class Tabs extends Base {
         'selector' => 'css',
         'locator' => 'nav[role="navigation"].tabs-wrapper',
       ],
+      'drupal.core.tabs.primary_tabs.wrapper__claro' => [
+        'selector' => 'css',
+        'locator' => 'nav[role="navigation"].tabs-wrapper',
+      ],
       'drupal.core.tabs.primary_tabs.links' => [
         'selector' => 'css',
         'locator' => 'a',
       ],
       'drupal.core.tabs.primary_tabs.links__olivero' => [
+        'selector' => 'css',
+        'locator' => '.tabs__tab > a',
+      ],
+      'drupal.core.tabs.primary_tabs.links__claro' => [
         'selector' => 'css',
         'locator' => '.tabs__tab > a',
       ],
