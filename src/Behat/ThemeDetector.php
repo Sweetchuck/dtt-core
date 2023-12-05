@@ -16,61 +16,46 @@ class ThemeDetector implements ThemeDetectorInterface {
   public function getCurrentThemeName(Session $session): string {
     $this->session = $session;
 
-    $themeName = $this->getCurrentThemeNameByFavicon();
-
-    if (!$themeName) {
-      $themeName = $this->getCurrentThemeNameByLogo();
-    }
-
+    $themeName = $this->getCurrentThemeNameByElementAttribute();
     if (!$themeName) {
       $themeName = $this->getCurrentThemeNameByAjaxPageState();
     }
 
-    if (!$themeName) {
-      $themeName = 'bartik';
-    }
-
-    return $themeName;
+    return $themeName ?: 'olivero';
   }
 
-  protected function getCurrentThemeNameByFavicon(): string {
-    $xpathQuery = '/head/link[@rel="shortcut icon"][@href]';
-
+  protected function getCurrentThemeNameByElementAttribute(): string {
     $page = $this->session->getPage();
-    $linkElement = $page->find('xpath', $xpathQuery);
 
-    if (!$linkElement) {
-      return '';
+    $xpathQueries = [
+      '/head/link[@rel="shortcut icon"][@href]' => 'href',
+      '/head/link[@rel="icon"][@href]' => 'href',
+      '/head/meta[@name="msapplication-TileImage"][@content]' => 'content',
+      '//a[@href="/"]/img[contains(@src, "/logo.svg")]' => 'src',
+    ];
+    foreach ($xpathQueries as $xpathQuery => $attributeName) {
+      $element = $page->find('xpath', $xpathQuery);
+      if (!$element) {
+        continue;
+      }
+
+      $href = $element->getAttribute($attributeName);
+      if (str_ends_with($href, '/core/misc/favicon.ico')
+        || preg_match('@/sites/[^/]+/files/@', $href) === 1
+      ) {
+        // Drupal default favicon is used.
+        // Custom favicon file is uploaded into the "files" directory.
+        continue;
+      }
+
+      // This method assumes that the image URL is ".../themes/THEME_MACHINE_NAME/favicon.ico".
+      $hrefParts = explode('/', trim($href, '/'));
+      array_pop($hrefParts);
+
+      return (string) end($hrefParts);
     }
 
-    $href = $linkElement->getAttribute('href');
-    if ($href === '/core/misc/favicon.ico') {
-      return '';
-    }
-
-    // @todo Check "files" directory.
-    $hrefParts = explode('/', trim($href, '/'));
-    array_pop($hrefParts);
-
-    return (string) end($hrefParts);
-  }
-
-  protected function getCurrentThemeNameByLogo(): string {
-    // @todo Drupal is installed in a subdirectory.
-    $xpathQuery = '//a[@href="/"]/img[contains(@src, "/logo.svg")]';
-
-    $page = $this->session->getPage();
-    $imgElement = $page->find('xpath', $xpathQuery);
-
-    if (!$imgElement) {
-      return '';
-    }
-
-    $src = $imgElement->getAttribute('src');
-    $srcParts = explode('/', trim($src, '/'));
-    array_pop($srcParts);
-
-    return (string) end($srcParts);
+    return '';
   }
 
   protected function getCurrentThemeNameByAjaxPageState(): string {
